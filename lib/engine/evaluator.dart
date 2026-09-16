@@ -156,6 +156,10 @@ class Evaluator {
   Value _store(StoreNode n) {
     final v = eval(n.expr);
     final t = n.target;
+    if (t.startsWith('dim(')) {
+      _storeDim(v, t.substring(4, t.length - 1));
+      return v;
+    }
     if (t.startsWith('L')) {
       ctx.lists[t] = _toRealList(v);
     } else if (t.startsWith('[')) {
@@ -174,6 +178,39 @@ class Evaluator {
       ctx.setVar(t, v.asReal);
     }
     return v;
+  }
+
+  /// {r,c}→dim([A]) resizes a matrix; n→dim(L1) resizes a list.
+  void _storeDim(Value v, String name) {
+    if (name.startsWith('[') && name.endsWith(']')) {
+      if (v is! ListValue || v.items.length != 2) {
+        throw const CalcException('DATA TYPE');
+      }
+      final r = v.items[0].asReal.round(), c = v.items[1].asReal.round();
+      if (r < 1 || c < 1 || r > 400 || c > 400) {
+        throw const CalcException('DOMAIN');
+      }
+      final m = Matrix(r, c);
+      final old = ctx.matrices[name];
+      if (old != null) {
+        for (var i = 0; i < r && i < old.rows; i++) {
+          for (var j = 0; j < c && j < old.cols; j++) {
+            m.set(i, j, old.at(i, j));
+          }
+        }
+      }
+      ctx.matrices[name] = m;
+      return;
+    }
+    final n = v.asReal.round();
+    if (n < 0 || n > 9999) throw const CalcException('DOMAIN');
+    final l = ctx.list(name);
+    while (l.length > n) {
+      l.removeLast();
+    }
+    while (l.length < n) {
+      l.add(0);
+    }
   }
 
   List<double> _toRealList(Value v) {

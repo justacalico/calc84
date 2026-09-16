@@ -137,6 +137,7 @@ class CalcState extends ChangeNotifier {
   void push(ScreenId id) {
     _stack.add(screen);
     screen = id;
+    _fieldFresh = true;
     notify();
   }
 
@@ -245,12 +246,13 @@ class CalcState extends ChangeNotifier {
       case Modifier.alpha:
       case Modifier.alphaLock:
         if (d.alphaInsert != null) return _Insert(d.alphaInsert!);
+        final c = _alphaCmd(d.id);
+        if (c != null) return _Cmd(c);
         if (d.alphaLabel != null) {
           final t = d.alphaLabel == ' ' ? ' ' : d.alphaLabel!;
           return _Insert(t);
         }
-        final c = _alphaCmd(d.id);
-        return c == null ? null : _Cmd(c);
+        return null;
       case Modifier.none:
         if (d.insert != null) return _Insert(d.insert!);
         final c = _primaryCmd(d.id);
@@ -335,6 +337,10 @@ class CalcState extends ChangeNotifier {
     insertText(text);
   }
 
+  /// Field rows replace their content on the first keystroke, like
+  /// the WINDOW screen on real hardware.
+  bool _fieldFresh = true;
+
   /// Paste text into whatever field is focused on the current screen.
   void insertText(String text) {
     if (screen == ScreenId.graph) {
@@ -343,6 +349,18 @@ class CalcState extends ChangeNotifier {
     }
     final e = _activeEntry();
     if (e == null) return;
+    if (_fieldFresh &&
+        switch (screen) {
+          ScreenId.windowEdit ||
+          ScreenId.tblset ||
+          ScreenId.solver ||
+          ScreenId.tvm =>
+            true,
+          _ => false,
+        }) {
+      e.clear();
+    }
+    _fieldFresh = false;
     e.paste(text);
     _afterEdit(e);
   }
@@ -766,6 +784,7 @@ class CalcState extends ChangeNotifier {
     if (dy != 0) {
       _commitField(fields[row]);
       setRow((row + dy).clamp(0, fields.length - 1));
+      _fieldFresh = true;
       return;
     }
     final e = fields[row].line;
@@ -918,8 +937,9 @@ class CalcState extends ChangeNotifier {
     if (s.isEmpty) return ctx.ans;
     // Command statements handled outside the expression parser.
     for (final cmd in _homeCommands.keys) {
-      if (s.startsWith(cmd)) {
-        return _homeCommands[cmd]!(s.substring(cmd.length));
+      final key = cmd.trimRight();
+      if (s.startsWith(key)) {
+        return _homeCommands[cmd]!(s.substring(key.length).trimLeft());
       }
     }
     return evalSource(s, ctx);
@@ -1631,7 +1651,15 @@ class CalcState extends ChangeNotifier {
       _commitMatCell();
       matCellEditing = false;
     }
-    _matArrow(0, 1);
+    final m = ctx.matrices[matrixName]!;
+    final cols = matRow == -1 ? 2 : m.cols;
+    if (matCol < cols - 1) {
+      matCol++;
+    } else if (matRow < m.rows - 1) {
+      matCol = 0;
+      matRow++;
+    }
+    cellLine.clear();
   }
 
   // =========================================================================
@@ -1756,6 +1784,7 @@ class CalcState extends ChangeNotifier {
     if (dy != 0) {
       if (tvmRow < 7) _commitTvmRow(tvmRow);
       tvmRow = (tvmRow + dy).clamp(0, 7);
+      _fieldFresh = true;
     } else if (tvmRow < 7) {
       final e = tvmLines[tvmRow];
       dx < 0 ? e.left() : e.right();
@@ -1771,6 +1800,7 @@ class CalcState extends ChangeNotifier {
     }
     _commitTvmRow(tvmRow);
     tvmRow = (tvmRow + 1).clamp(0, 7);
+    _fieldFresh = true;
   }
 
   void _commitTvmRow(int r) {

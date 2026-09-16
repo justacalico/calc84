@@ -51,7 +51,14 @@ class Parser {
       if (t.type != TokType.name && t.type != TokType.func) {
         throw const CalcException('SYNTAX');
       }
-      e = StoreNode(e, t.text.replaceAll('(', ''));
+      if (t.text == 'dim(') {
+        final n = next();
+        if (n.type != TokType.name) throw const CalcException('SYNTAX');
+        _expect(TokType.rparen);
+        e = StoreNode(e, 'dim(${n.text})');
+      } else {
+        e = StoreNode(e, t.text.replaceAll('(', ''));
+      }
     }
     while (at(TokType.op) && hintTokens.contains(peek!.text)) {
       e = HintNode(e, next().text);

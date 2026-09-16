@@ -110,7 +110,7 @@ void main() {
       final f = Formatter(DisplaySettings());
       expect(f.format(const RealValue(1.5)).lines, ['1.5']);
       f.settings.decimals = 2;
-      expect(f.format(const RealValue(math_pi)).lines, ['3.14']);
+      expect(f.format(const RealValue(mathPi)).lines, ['3.14']);
     });
 
     test('sci notation', () {
@@ -134,4 +134,4 @@ void main() {
   });
 }
 
-const math_pi = 3.141592653589793;
+const mathPi = 3.141592653589793;

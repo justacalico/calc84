@@ -568,6 +568,17 @@ _Fn _sort(bool asc) => (ev, args) {
 
 Value _augment(Evaluator ev, List<Node> args) {
   final vals = _args(ev, args, 2, 2);
+  if (vals[0] is MatrixValue || vals[1] is MatrixValue) {
+    if (vals[0] is! MatrixValue || vals[1] is! MatrixValue) {
+      throw const CalcException('DATA TYPE');
+    }
+    final a = (vals[0] as MatrixValue).m;
+    final b = (vals[1] as MatrixValue).m;
+    if (a.rows != b.rows) throw const CalcException('DIM MISMATCH');
+    return MatrixValue(Matrix.from([
+      for (var r = 0; r < a.rows; r++) [...a.data[r], ...b.data[r]],
+    ]));
+  }
   return ListValue([
     for (final v in vals)
       ..._listOf(v).map(RealValue.new),
@@ -986,14 +997,15 @@ Value _dbd(Evaluator ev, List<Node> args) {
   return RealValue(b.difference(a).inDays.toDouble());
 }
 
+/// TI date numbers are mm.ddyy with a 1950-2049 year window.
 DateTime _parseDate(double v) {
   final s = v.toStringAsFixed(4);
   final parts = s.split('.');
-  final md = parts[0];
-  final y = int.parse(parts[1].padRight(4, '0'));
-  final m = int.parse(md.substring(0, md.length - 2).padLeft(1, '0'));
-  final d = int.parse(md.substring(md.length - 2));
-  return DateTime(y, m, d);
+  final m = int.parse(parts[0]);
+  final ddyy = parts[1].padRight(4, '0');
+  final d = int.parse(ddyy.substring(0, 2));
+  final yy = int.parse(ddyy.substring(2));
+  return DateTime(yy <= 49 ? 2000 + yy : 1900 + yy, m, d);
 }
 
 Value _getTime(Evaluator ev, List<Node> args) {

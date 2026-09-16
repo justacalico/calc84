@@ -1,7 +1,5 @@
 import 'package:calc84/model/keymap.dart';
-import 'package:calc84/engine/context.dart';
 import 'package:calc84/model/screens.dart';
-import 'package:calc84/model/settings.dart';
 import 'package:calc84/state/calc_state.dart';
 import 'package:flutter_test/flutter_test.dart';
 

@@ -111,16 +111,21 @@ const keypadDefs = <KeyDef>[
   KeyDef(KeyId.n3, '3', secondLabel: 'L3', alphaLabel: 'θ', insert: '3',
       secondInsert: 'L3'),
   KeyDef(KeyId.add, '+', secondLabel: 'mem', alphaLabel: '"', insert: '+',
-      secondInsert: '"'),
+      alphaInsert: '"'),
   KeyDef(KeyId.on, 'on', secondLabel: 'off'),
-  KeyDef(KeyId.n0, '0', secondLabel: 'catalog', alphaLabel: ' ', insert: '0',
-      secondInsert: ' '),
+  KeyDef(KeyId.n0, '0', secondLabel: 'catalog', alphaLabel: ' ',
+      insert: '0', alphaInsert: ' '),
   KeyDef(KeyId.dot, '.', secondLabel: 'i', alphaLabel: ':', insert: '.',
       secondInsert: 'i'),
   KeyDef(KeyId.neg, '(-)', secondLabel: 'ans', alphaLabel: '?',
       insert: '⁻', secondInsert: 'Ans'),
   KeyDef(KeyId.enter, 'enter', secondLabel: 'entry', alphaLabel: 'solve',
       style: KeyStyle.light),
+  // Arrow cluster keys never render in the grid but need defs.
+  KeyDef(KeyId.up, 'up'),
+  KeyDef(KeyId.down, 'down'),
+  KeyDef(KeyId.left, 'left'),
+  KeyDef(KeyId.right, 'right'),
 ];
 
 /// Keys laid out in rows for the keypad widget. The arrows sit in a

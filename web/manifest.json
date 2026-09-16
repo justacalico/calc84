@@ -1,11 +1,11 @@
 {
-    "name": "calc84",
-    "short_name": "calc84",
+    "name": "CALC-84 Plus CE",
+    "short_name": "CALC-84",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#16181d",
+    "theme_color": "#16181d",
+    "description": "Open source TI-84 Plus CE style graphing calculator.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

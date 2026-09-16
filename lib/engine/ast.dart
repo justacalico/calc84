@@ -62,11 +62,14 @@ class MatrixLitNode extends Node {
   final List<List<Node>> rows;
 }
 
-/// expr → NAME
+/// expr → NAME, or expr → NAME(i) for list/matrix element stores.
 class StoreNode extends Node {
-  const StoreNode(this.expr, this.target);
+  const StoreNode(this.expr, this.target, [this.index]);
   final Node expr;
   final String target;
+
+  /// Element index expressions for L1(i) / [A](r,c) targets.
+  final List<Node>? index;
 }
 
 /// expr ▸Frac / ▸Dec / ▸DMS / ▸Rect / ▸Polar display hint.

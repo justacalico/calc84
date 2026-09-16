@@ -57,7 +57,22 @@ class Parser {
         _expect(TokType.rparen);
         e = StoreNode(e, 'dim(${n.text})');
       } else {
-        e = StoreNode(e, t.text.replaceAll('(', ''));
+        var name = t.text;
+        if (name.endsWith('(')) {
+          name = name.substring(0, name.length - 1);
+        }
+        List<Node>? index;
+        if (at(TokType.lparen)) {
+          // Element store: L1(i), [A](r,c)
+          pos++;
+          index = [logic()];
+          while (at(TokType.comma)) {
+            pos++;
+            index.add(logic());
+          }
+          _expect(TokType.rparen);
+        }
+        e = StoreNode(e, name, index);
       }
     }
     while (at(TokType.op) && hintTokens.contains(peek!.text)) {
@@ -232,7 +247,16 @@ class Parser {
         _expect(TokType.rbrace);
         return ListNode(items);
       case TokType.func:
-        if (t.text == 'rand') return const CallNode('rand', []);
+        if (t.text == 'rand') {
+          // rand takes an optional trial count: rand(5) yields a list.
+          if (at(TokType.lparen)) {
+            pos++;
+            final arg = logic();
+            _expect(TokType.rparen);
+            return CallNode('rand', [arg]);
+          }
+          return const CallNode('rand', []);
+        }
         final fn = t.text.substring(0, t.text.length - 1);
         final args = <Node>[];
         if (!at(TokType.rparen)) {

@@ -47,6 +47,9 @@ class Complex {
       }
       return neg ? one / result : result;
     }
+    if (re == 0 && im == 0) {
+      return o.re > 0 ? Complex.zero : const Complex(1e300, 1e300);
+    }
     final lnR = math.log(magnitude);
     final theta = argument;
     final r = math.exp(lnR * o.re - theta * o.im);
@@ -78,6 +81,20 @@ class Complex {
       );
 
   Complex tan() => sin() / cos();
+
+  Complex get sinhC => (exp - (-this).exp) / const Complex(2, 0);
+
+  Complex get coshC => (exp + (-this).exp) / const Complex(2, 0);
+
+  Complex get tanhC => sinhC / coshC;
+
+  Complex get asinh => (this + (this * this + one).sqrt).ln;
+
+  Complex get acosh =>
+      (this + (this - one).sqrt * (this + one).sqrt).ln;
+
+  Complex get atanh =>
+      ((one + this).ln - (one - this).ln) / const Complex(2, 0);
 
   Complex asin() {
     final iz = i * this;

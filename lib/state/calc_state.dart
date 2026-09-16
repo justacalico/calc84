@@ -369,7 +369,8 @@ class CalcState extends ChangeNotifier {
         ScreenId.home => entry,
         ScreenId.yEquals => _eqLines()[_safeEqRow()].line,
         ScreenId.windowEdit => _winFields()[winRow].line,
-        ScreenId.tblset => _tblFields()[tblRow].line,
+        ScreenId.tblset =>
+          tblRow < _tblFields().length ? _tblFields()[tblRow].line : null,
         ScreenId.solver => _solverFields()[solverRow].line,
         ScreenId.tvm => tvmRow < 7 ? tvmLines[tvmRow] : null,
         ScreenId.programName => prgmNameLine,
@@ -709,6 +710,17 @@ class CalcState extends ChangeNotifier {
       case ScreenId.windowEdit:
         _fieldArrow(_winFields(), dx, dy, (r) => winRow = r, () => winRow);
       case ScreenId.tblset:
+        if (dy != 0 && tblRow >= _tblFields().length) {
+          // On the Indpnt/Depend toggle rows.
+          tblRow = (tblRow + dy).clamp(0, 3);
+          return;
+        }
+        if (dy != 0 && tblRow == _tblFields().length - 1 && dy > 0) {
+          _commitField(_tblFields()[tblRow]);
+          tblRow++;
+          _fieldFresh = true;
+          return;
+        }
         _fieldArrow(_tblFields(), dx, dy, (r) => tblRow = r, () => tblRow);
       case ScreenId.solver:
         _fieldArrow(_solverFields(), dx, dy, (r) => solverRow = r,
@@ -1926,7 +1938,8 @@ class CalcState extends ChangeNotifier {
       case 'STRING':
         ctx.strings.remove(name);
     }
-    memRow = memRow.clamp(0, _memItems().length - 1);
+    final n = _memItems().length;
+    memRow = n == 0 ? 0 : memRow.clamp(0, n - 1);
   }
 
   void openMemManage() {
@@ -2143,14 +2156,14 @@ class CalcState extends ChangeNotifier {
       if (graphPrompt == null) {
         graphPrompt = g.calcPrompt.isEmpty ? 'X=' : g.calcPrompt;
         promptLine.clear();
-        promptApply = (v) {
-          if (g.calcOp != null) {
-            _calcTypedValue(v);
-          } else {
-            g.traceTo(v);
-          }
-        };
       }
+      promptApply = (v) {
+        if (g.calcOp != null) {
+          _calcTypedValue(v);
+        } else {
+          g.traceTo(v);
+        }
+      };
       promptLine.paste(text);
     }
   }

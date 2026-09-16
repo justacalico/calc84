@@ -80,6 +80,10 @@ class Evaluator {
     if (_isEquationName(name)) {
       return _evalEquation(name, a[0]);
     }
+    if (RegExp(r'^(Y\d|X\dT|Y\dT|r\d)$').hasMatch(name)) {
+      // Defined or not, an equation name call reports UNDEFINED.
+      return _evalEquation(name, a[0]);
+    }
     // Plain variable followed by a parenthesized expression: implied
     // multiplication like the real OS.
     if (a.length != 1) throw const CalcException('SYNTAX');
@@ -154,8 +158,24 @@ class Evaluator {
   }
 
   Value _store(StoreNode n) {
-    final v = eval(n.expr);
     final t = n.target;
+    // Equation and sequence targets take the expression itself,
+    // like typing into Y= on the real OS.
+    if (n.index == null &&
+        RegExp(r'^(Y\d|X\dT|Y\dT|r\d|u|v|w)$').hasMatch(t)) {
+      if (t == 'u' || t == 'v' || t == 'w') {
+        ctx.sequences[t]!.expression = unparse(n.expr);
+      } else {
+        ctx.equation(t).expression = unparse(n.expr);
+      }
+      ctx.clearSequenceCache();
+      return StringValue(unparse(n.expr));
+    }
+    final v = eval(n.expr);
+    final idx = n.index;
+    if (idx != null) {
+      return _storeIndex(t, v, idx);
+    }
     if (t.startsWith('dim(')) {
       _storeDim(v, t.substring(4, t.length - 1));
       return v;
@@ -168,15 +188,36 @@ class Evaluator {
     } else if (t.startsWith('Str')) {
       if (v is! StringValue) throw const CalcException('DATA TYPE');
       ctx.strings[t] = v.v;
-    } else if (RegExp(r'^(Y\d|X\dT|Y\dT|r\d|u|v|w)$').hasMatch(t)) {
-      if (t == 'u' || t == 'v' || t == 'w') {
-        ctx.sequences[t]!.expression = unparse(n.expr);
-      } else {
-        ctx.equation(t).expression = unparse(n.expr);
-      }
     } else {
       ctx.setVar(t, v.asReal);
     }
+    return v;
+  }
+
+  /// v→L1(i) stores into a list element (extending with zeros);
+  /// v→[A](r,c) stores into an existing matrix cell.
+  Value _storeIndex(String t, Value v, List<Node> index) {
+    if (t.startsWith('[')) {
+      final m = ctx.matrices[t];
+      if (m == null || index.length != 2) {
+        throw const CalcException('UNDEFINED');
+      }
+      final r = eval(index[0]).asReal.round();
+      final c = eval(index[1]).asReal.round();
+      if (r < 1 || c < 1 || r > m.rows || c > m.cols) {
+        throw const CalcException('DOMAIN');
+      }
+      m.set(r - 1, c - 1, v.asReal);
+      return v;
+    }
+    if (index.length != 1) throw const CalcException('SYNTAX');
+    final i = eval(index[0]).asReal.round();
+    if (i < 1 || i > 999) throw const CalcException('DOMAIN');
+    final l = ctx.list(t);
+    while (l.length < i) {
+      l.add(0);
+    }
+    l[i - 1] = v.asReal;
     return v;
   }
 
@@ -289,21 +330,18 @@ class Evaluator {
   }
 
   double _factorial(double x) {
-    if (x < 0 || x > 449 || x != x.roundToDouble()) {
-      if (x == x.roundToDouble() || x < 0) {
-        // Use gamma for non-integers >= 0 like the real OS does
-        // via x! = gamma(x+1).
-        if (x >= 0) return _gamma(x + 1);
-        throw const CalcException('DOMAIN');
-      }
+    if (x == x.roundToDouble()) {
+      if (x < 0) throw const CalcException('DOMAIN');
       if (x > 449) throw const CalcException('OVERFLOW');
-      return _gamma(x + 1);
+      var r = 1.0;
+      for (var i = 2; i <= x.round(); i++) {
+        r *= i;
+      }
+      return r;
     }
-    var r = 1.0;
-    for (var i = 2; i <= x.round(); i++) {
-      r *= i;
-    }
-    return r;
+    // Non-integers use x! = gamma(x+1), like the real OS.
+    if (x < 0) throw const CalcException('DOMAIN');
+    return _gamma(x + 1);
   }
 
   double _gamma(double x) {
@@ -550,7 +588,8 @@ String unparse(Node n) => switch (n) {
       UnaryNode() => '⁻${unparse(n.operand)}',
       BinaryNode() => '${unparse(n.left)}${n.op}${unparse(n.right)}',
       PostfixNode() => '${unparse(n.operand)}${n.op}',
-      StoreNode() => '${unparse(n.expr)}→${n.target}',
+      StoreNode() =>
+        '${unparse(n.expr)}→${n.target}${n.index == null ? '' : '(${n.index!.map(unparse).join(',')})'}',
       HintNode() => '${unparse(n.expr)}${n.hint}',
       SeqNode() => n.items.map(unparse).join(':'),
     };
@@ -563,5 +602,7 @@ String _numText(double v) {
 }
 
 /// One-shot convenience: parse and evaluate [src].
-Value evalSource(String src, CalcContext ctx) =>
-    Evaluator(ctx).eval(Parser.parse(src));
+Value evalSource(String src, CalcContext ctx) {
+  registerInlineEval(evalSource);
+  return Evaluator(ctx).eval(Parser.parse(src));
+}

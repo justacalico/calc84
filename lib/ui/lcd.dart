@@ -110,6 +110,7 @@ class _ScreenBody extends StatelessWidget {
         return CustomPaint(painter: GraphPainter(state));
       case SplitMode.gt:
         return Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(child: CustomPaint(painter: GraphPainter(state))),
             Expanded(
@@ -123,6 +124,7 @@ class _ScreenBody extends StatelessWidget {
         );
       case SplitMode.horiz:
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(child: CustomPaint(painter: GraphPainter(state))),
             Expanded(

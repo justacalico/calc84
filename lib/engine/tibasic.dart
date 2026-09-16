@@ -211,12 +211,23 @@ class ProgramRunner {
       case _If():
         final cond = evalSource(s.cond, ctx).asReal != 0;
         final stmts = _lines[_pc];
-        final thenNext =
+        final thenInline =
             _stmtIdx < stmts.length && stmts[_stmtIdx] is _Then;
-        if (thenNext) {
-          _stmtIdx++; // consume Then
+        // `Then` on the following line is the usual TI layout.
+        final thenNextLine = !thenInline &&
+            _pc + 1 < _lines.length &&
+            _lines[_pc + 1].isNotEmpty &&
+            _lines[_pc + 1].first is _Then;
+        if (thenInline || thenNextLine) {
+          if (thenInline) {
+            _stmtIdx++;
+          } else {
+            _pc++;
+            _stmtIdx = 1;
+          }
           if (cond) {
             _blocks.add(_IfBlock());
+            if (thenNextLine) return true;
           } else {
             _skipToElseOrEnd();
             return true;

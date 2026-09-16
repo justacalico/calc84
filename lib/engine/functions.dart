@@ -30,14 +30,19 @@ final Map<String, _Fn> _handlers = {
   'sin⁻¹': _invTrig((x) => math.asin(x), (c) => c.asin()),
   'cos⁻¹': _invTrig((x) => math.acos(x), (c) => c.acos()),
   'tan⁻¹': _invTrig((x) => math.atan(x), (c) => c.atan()),
-  'sinh': _plain((x) => _sinh(x)),
-  'cosh': _plain((x) => _cosh(x)),
-  'tanh': _plain((x) => _sinh(x) / _cosh(x)),
-  'sinh⁻¹': _plain((x) => math.log(x + math.sqrt(x * x + 1))),
-  'cosh⁻¹': _domain(1, double.infinity,
-      (x) => math.log(x + math.sqrt(x * x - 1))),
-  'tanh⁻¹': _domain(-1.0000001, 1.0000001,
-      (x) => 0.5 * math.log((1 + x) / (1 - x))),
+  'sinh': _both((x) => _sinh(x), (c) => c.sinhC),
+  'cosh': _both((x) => _cosh(x), (c) => c.coshC),
+  'tanh': _both((x) => _sinh(x) / _cosh(x), (c) => c.tanhC),
+  'sinh⁻¹': _both(
+      (x) => math.log(x + math.sqrt(x * x + 1)), (c) => c.asinh),
+  'cosh⁻¹': _both((x) {
+    if (x < 1) throw _NotReal();
+    return math.log(x + math.sqrt(x * x - 1));
+  }, (c) => c.acosh),
+  'tanh⁻¹': _both((x) {
+    if (x <= -1 || x >= 1) throw _NotReal();
+    return 0.5 * math.log((1 + x) / (1 - x));
+  }, (c) => c.atanh),
 
   // Powers and logs
   '√': _sqrt,
@@ -225,6 +230,9 @@ Value _mapValue(Evaluator ev, Value v, double Function(double) f,
       return RealValue(f(v.v));
     } on _NotReal {
       if (cf == null) rethrow;
+      if (ev.ctx.complexMode != ComplexMode.aBi) {
+        throw const CalcException('NONREAL ANS');
+      }
       return ComplexValue(cf(Complex(v.v, 0)));
     }
   }
@@ -240,12 +248,10 @@ _Fn _plain(double Function(double) f) => (ev, args) {
       return _mapValue(ev, ev.eval(args[0]), f);
     };
 
-_Fn _domain(double lo, double hi, double Function(double) f) => (ev, args) {
+_Fn _both(double Function(double) f, Complex Function(Complex) cf) =>
+    (ev, args) {
       _arity(args, 1);
-      return _mapValue(ev, ev.eval(args[0]), (x) {
-        if (x <= lo || x >= hi) throw const CalcException('DOMAIN');
-        return f(x);
-      });
+      return _mapValue(ev, ev.eval(args[0]), f, cf);
     };
 
 Value _sqrt(Evaluator ev, List<Node> args) {

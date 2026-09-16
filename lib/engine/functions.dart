@@ -283,8 +283,8 @@ Value _log10(Evaluator ev, List<Node> args) {
 
 Value _logBase(Evaluator ev, List<Node> args) {
   _arity(args, 2);
-  final b = _real(ev, args[0]);
-  final x = _real(ev, args[1]);
+  final x = _real(ev, args[0]);
+  final b = _real(ev, args[1]);
   if (x <= 0 || b <= 0 || b == 1) throw const CalcException('DOMAIN');
   return RealValue(math.log(x) / math.log(b));
 }

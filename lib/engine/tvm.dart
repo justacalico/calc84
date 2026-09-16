@@ -16,9 +16,12 @@ class TvmSolver {
 
   double _rate() => i / 100 / cy;
 
+  /// Future-value annuity factor ((1+r)^n - 1)/r, adjusted for
+  /// payments at the beginning of each period.
   double _pmtFactor(double rate, double periods) {
     if (rate == 0) return periods;
-    return (1 - math.pow(1 + rate, -periods).toDouble()) / rate *
+    return (math.pow(1 + rate, periods).toDouble() - 1) /
+        rate *
         (pmtEnd ? 1 : 1 + rate);
   }
 

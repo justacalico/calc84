@@ -49,6 +49,19 @@ class ListNode extends Node {
   final List<Node> items;
 }
 
+/// NAME(expr) or NAME(r,c): list/matrix indexing, equation call.
+class IndexNode extends Node {
+  const IndexNode(this.name, this.args);
+  final String name;
+  final List<Node> args;
+}
+
+/// [[a,b][c,d]] matrix literal, rows as parsed node lists.
+class MatrixLitNode extends Node {
+  const MatrixLitNode(this.rows);
+  final List<List<Node>> rows;
+}
+
 /// expr → NAME
 class StoreNode extends Node {
   const StoreNode(this.expr, this.target);

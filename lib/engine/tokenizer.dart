@@ -1,6 +1,21 @@
 import 'value.dart';
 
-enum TokType { number, name, func, op, lparen, rparen, lbrace, rbrace, comma, str, colon, store }
+enum TokType {
+  number,
+  name,
+  func,
+  op,
+  lparen,
+  rparen,
+  lbrace,
+  rbrace,
+  lbracket,
+  rbracket,
+  comma,
+  str,
+  colon,
+  store
+}
 
 class Tok {
   const Tok(this.type, this.text);
@@ -58,7 +73,7 @@ const infixOps = {'nPr', 'nCr', 'ˣ√'};
 /// Word-like operators matched before single letter names.
 const wordOps = {'and', 'or', 'xor', 'nPr', 'nCr'};
 
-const postfixOps = {'!', '°', '′', '″', 'ʳ', '²', '³', '⁻¹', 'ᵀ'};
+const postfixOps = {'!', '°', '′', '″', 'ʳ', '²', '³', '⁻¹', 'ᵀ', '%'};
 
 const hintTokens = {'▸Frac', '▸Dec', '▸DMS', '▸Rect', '▸Polar', '▸n/d', '▸Un/d'};
 
@@ -106,6 +121,11 @@ class Tokenizer {
         }
         continue;
       }
+      if (src.startsWith('⁻¹', pos)) {
+        out.add(const Tok(TokType.op, '⁻¹'));
+        pos += 2;
+        continue;
+      }
       if (postfixOps.contains(c)) {
         out.add(Tok(TokType.op, c));
         pos++;
@@ -121,6 +141,10 @@ class Tokenizer {
           out.add(const Tok(TokType.lparen, '('));
         case ')':
           out.add(const Tok(TokType.rparen, ')'));
+        case '[':
+          out.add(const Tok(TokType.lbracket, '['));
+        case ']':
+          out.add(const Tok(TokType.rbracket, ']'));
         case '{':
           out.add(const Tok(TokType.lbrace, '{'));
         case '}':

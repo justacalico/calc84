@@ -80,9 +80,12 @@ class Formatter {
   }
 
   /// Classic display: up to 10 significant digits in Float mode,
-  /// trailing zeros trimmed, falls back to E notation when the
+  /// trailing zeros trimmed, falls back to ᴇ notation when the
   /// number will not fit.
-  String num(double v, {String? hint}) {
+  String num(double v, {String? hint}) =>
+      _num(v, hint: hint).replaceAll('E', 'ᴇ');
+
+  String _num(double v, {String? hint}) {
     if (hint == '▸Frac' || hint == '▸n/d' || hint == '▸Un/d') {
       final f = Fraction.approximate(v);
       if (f != null) {

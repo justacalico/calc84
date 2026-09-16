@@ -161,10 +161,27 @@ class Parser {
 
   Node postfix() {
     var e = primary();
-    while (at(TokType.op) && postfixOps.contains(peek!.text)) {
-      e = PostfixNode(next().text, e);
+    while (true) {
+      if (e is NameNode && at(TokType.lparen)) {
+        pos++;
+        final args = <Node>[];
+        if (!at(TokType.rparen)) {
+          args.add(logic());
+          while (at(TokType.comma)) {
+            pos++;
+            args.add(logic());
+          }
+        }
+        _expect(TokType.rparen);
+        e = IndexNode(e.name, args);
+        continue;
+      }
+      if (at(TokType.op) && postfixOps.contains(peek!.text)) {
+        e = PostfixNode(next().text, e);
+        continue;
+      }
+      return e;
     }
-    return e;
   }
 
   Node primary() {
@@ -182,6 +199,20 @@ class Parser {
         final e = logic();
         _expect(TokType.rparen);
         return e;
+      case TokType.lbracket:
+        final rows = <List<Node>>[];
+        while (at(TokType.lbracket)) {
+          pos++;
+          final row = <Node>[logic()];
+          while (at(TokType.comma)) {
+            pos++;
+            row.add(logic());
+          }
+          _expect(TokType.rbracket);
+          rows.add(row);
+        }
+        _expect(TokType.rbracket);
+        return MatrixLitNode(rows);
       case TokType.lbrace:
         final items = <Node>[];
         if (!at(TokType.rbrace)) {

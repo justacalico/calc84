@@ -272,6 +272,7 @@ class CalcState extends ChangeNotifier {
         KeyId.right => _C.right,
         KeyId.xttn => _C.insertXttn,
         KeyId.stat => _C.stat,
+        KeyId.math => _C.math,
         KeyId.apps => _C.apps,
         KeyId.prgm => _C.prgm,
         KeyId.vars => _C.vars,
@@ -314,10 +315,22 @@ class CalcState extends ChangeNotifier {
   // Inserts
   // =========================================================================
 
+  /// Operators that continue from Ans when pressed on an empty
+  /// home entry line, like the real OS.
+  static const _ansOps = {
+    '+', '-', '*', '/', '^', '→', '²', '³', '°', '%', '!', '⁻¹', 'ᵀ',
+    'and', 'or', 'xor', 'nPr', 'nCr',
+  };
+
   void _insert(String text) {
     if (pendingRcl.isNotEmpty) {
       _finishRcl(text);
       return;
+    }
+    if (screen == ScreenId.home &&
+        entry.isEmpty &&
+        _ansOps.any(text.startsWith)) {
+      entry.paste('Ans');
     }
     insertText(text);
   }

@@ -20,6 +20,8 @@ class Evaluator {
         StrNode() => StringValue(n.v),
         NameNode() => _name(n.name),
         ListNode() => ListValue([for (final i in n.items) eval(i)]),
+        IndexNode() => _index(n),
+        MatrixLitNode() => _matrixLit(n),
         CallNode() => callFunction(this, n.fn, n.args),
         UnaryNode() => _unary(n.op, eval(n.operand)),
         BinaryNode() => _binary(n.op, n.left, n.right),
@@ -35,6 +37,54 @@ class Evaluator {
       last = eval(item);
     }
     return last;
+  }
+
+  Value _matrixLit(MatrixLitNode n) {
+    if (n.rows.isEmpty) throw const CalcException('SYNTAX');
+    final cols = n.rows.first.length;
+    final m = Matrix(n.rows.length, cols);
+    for (var r = 0; r < n.rows.length; r++) {
+      if (n.rows[r].length != cols) {
+        throw const CalcException('DIM MISMATCH');
+      }
+      for (var c = 0; c < cols; c++) {
+        m.set(r, c, eval(n.rows[r][c]).asReal);
+      }
+    }
+    return MatrixValue(m);
+  }
+
+  Value _index(IndexNode n) {
+    final name = n.name;
+    final a = [for (final x in n.args) eval(x).asReal];
+    if (a.isEmpty) throw const CalcException('SYNTAX');
+    if (name.startsWith('L') && ctx.lists.containsKey(name)) {
+      final l = ctx.lists[name]!;
+      final i = a[0].round();
+      if (i < 1 || i > l.length) throw const CalcException('DOMAIN');
+      return RealValue(l[i - 1]);
+    }
+    if (name.startsWith('[') && name.endsWith(']')) {
+      final m = ctx.matrices[name];
+      if (m == null) throw const CalcException('UNDEFINED');
+      if (a.length != 2) throw const CalcException('SYNTAX');
+      final r = a[0].round(), c = a[1].round();
+      if (r < 1 || c < 1 || r > m.rows || c > m.cols) {
+        throw const CalcException('DOMAIN');
+      }
+      return RealValue(m.at(r - 1, c - 1));
+    }
+    if (name == 'u' || name == 'v' || name == 'w') {
+      return RealValue(ctx.sequenceAt(name, a[0].round()));
+    }
+    if (_isEquationName(name)) {
+      return _evalEquation(name, a[0]);
+    }
+    // Plain variable followed by a parenthesized expression: implied
+    // multiplication like the real OS.
+    if (a.length != 1) throw const CalcException('SYNTAX');
+    return _binary('*', null, null,
+        precomputed: (_name(name), RealValue(a[0])));
   }
 
   Value _name(String name) {
@@ -180,6 +230,7 @@ class Evaluator {
         '³' => _pow3(v),
         '⁻¹' => _recip(v),
         'ᵀ' => _transpose(v),
+        '%' => _broadcast(v, (x) => x / 100),
         _ => throw const CalcException('SYNTAX'),
       };
 
@@ -455,6 +506,9 @@ String unparse(Node n) => switch (n) {
       StrNode() => '"${n.v}"',
       NameNode() => n.name,
       ListNode() => '{${n.items.map(unparse).join(',')}}',
+      IndexNode() => '${n.name}(${n.args.map(unparse).join(',')})',
+      MatrixLitNode() =>
+        '[${n.rows.map((r) => '[${r.map(unparse).join(',')}]').join()}]',
       CallNode() => '${n.fn}(${n.args.map(unparse).join(',')})',
       UnaryNode() => '⁻${unparse(n.operand)}',
       BinaryNode() => '${unparse(n.left)}${n.op}${unparse(n.right)}',

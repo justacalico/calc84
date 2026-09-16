@@ -17,40 +17,42 @@ class KeyButton extends StatelessWidget {
       children: [
         SizedBox(
           height: 13,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              if (def.secondLabel != null)
-                Padding(
-                  padding: const EdgeInsets.only(left: 3),
-                  child: Text(
-                    def.secondLabel!,
-                    style: CalcTheme.legend(color: CalcTheme.legend2nd),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 2),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (def.secondLabel != null)
+                  Flexible(
+                    child: Text(
+                      def.secondLabel!,
+                      overflow: TextOverflow.clip,
+                      softWrap: false,
+                      style: CalcTheme.legend(color: CalcTheme.legend2nd),
+                    ),
                   ),
-                )
-              else
-                const SizedBox.shrink(),
-              if (def.alphaLabel != null)
-                Padding(
-                  padding: const EdgeInsets.only(right: 3),
-                  child: Text(
+                if (def.alphaLabel != null)
+                  Text(
                     def.alphaLabel!,
+                    softWrap: false,
                     style: CalcTheme.legend(color: CalcTheme.legendAlpha),
                   ),
-                )
-              else
-                const SizedBox.shrink(),
-            ],
+              ],
+            ),
           ),
         ),
-        _KeyCap(def: def, onPress: onPress),
+        _KeyCap(
+          key: ValueKey('key-${def.id.name}'),
+          def: def,
+          onPress: onPress,
+        ),
       ],
     );
   }
 }
 
 class _KeyCap extends StatefulWidget {
-  const _KeyCap({required this.def, required this.onPress});
+  const _KeyCap({super.key, required this.def, required this.onPress});
 
   final KeyDef def;
   final void Function(KeyId) onPress;
@@ -72,12 +74,11 @@ class _KeyCapState extends State<_KeyCap> {
     };
     return Expanded(
       child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
         onTapDown: (_) => setState(() => _down = true),
-        onTapUp: (_) {
-          setState(() => _down = false);
-          widget.onPress(widget.def.id);
-        },
+        onTapUp: (_) => setState(() => _down = false),
         onTapCancel: () => setState(() => _down = false),
+        onTap: () => widget.onPress(widget.def.id),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 60),
           decoration: BoxDecoration(
@@ -109,16 +110,27 @@ class _KeyCapState extends State<_KeyCap> {
           child: Center(
             child: Transform.translate(
               offset: Offset(0, _down ? 1 : 0),
-              child: Text(
-                widget.def.label,
-                style: CalcTheme.keyLabel(
-                  size: widget.def.label.length > 4 ? 11 : 13,
-                ),
-              ),
+              child: _label(),
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _label() {
+    final label = widget.def.label;
+    final size = label.length > 4 ? 11.0 : 13.0;
+    final style = CalcTheme.keyLabel(size: size);
+    if (label.endsWith('→')) {
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(label.substring(0, label.length - 1), style: style),
+          Icon(Icons.east, size: size + 2, color: style.color),
+        ],
+      );
+    }
+    return Text(label, style: style);
   }
 }

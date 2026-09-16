@@ -28,3 +28,6 @@ flutter:
       fonts:
         - asset: assets/fonts/RobotoCondensed-Bold.ttf
           weight: 700
+    - family: MaterialIcons
+      fonts:
+        - asset: assets/fonts/MaterialIcons-Regular.otf

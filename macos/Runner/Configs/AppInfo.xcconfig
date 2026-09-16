@@ -8,7 +8,7 @@
 PRODUCT_NAME = CALC-84
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = dev.calc84.calc84
+PRODUCT_BUNDLE_IDENTIFIER = gitlab.httpanimations.calc84
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2026 dev.calc84. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2026 gitlab.httpanimations. All rights reserved.

@@ -77,3 +77,6 @@ glab release create "$RELEASE_TAG" \
   --ref "$RELEASE_COMMIT" \
   --use-package-registry \
   "$PROJECT_DIR/release-assets"/*
+
+# Keep the AltStore source feed current on versioned releases.
+bash scripts/update-altstore.sh "$RELEASE_TAG"

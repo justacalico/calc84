@@ -1,0 +1,70 @@
+/// Parsed expression tree.
+sealed class Node {
+  const Node();
+}
+
+class NumNode extends Node {
+  const NumNode(this.v);
+  final double v;
+}
+
+class StrNode extends Node {
+  const StrNode(this.v);
+  final String v;
+}
+
+/// Variable, list, matrix or equation reference resolved at eval time.
+class NameNode extends Node {
+  const NameNode(this.name);
+  final String name;
+}
+
+class CallNode extends Node {
+  const CallNode(this.fn, this.args);
+  final String fn;
+  final List<Node> args;
+}
+
+class UnaryNode extends Node {
+  const UnaryNode(this.op, this.operand);
+  final String op;
+  final Node operand;
+}
+
+class BinaryNode extends Node {
+  const BinaryNode(this.op, this.left, this.right);
+  final String op;
+  final Node left;
+  final Node right;
+}
+
+class PostfixNode extends Node {
+  const PostfixNode(this.op, this.operand);
+  final String op;
+  final Node operand;
+}
+
+class ListNode extends Node {
+  const ListNode(this.items);
+  final List<Node> items;
+}
+
+/// expr → NAME
+class StoreNode extends Node {
+  const StoreNode(this.expr, this.target);
+  final Node expr;
+  final String target;
+}
+
+/// expr ▸Frac / ▸Dec / ▸DMS / ▸Rect / ▸Polar display hint.
+class HintNode extends Node {
+  const HintNode(this.expr, this.hint);
+  final Node expr;
+  final String hint;
+}
+
+/// stmt : stmt : stmt
+class SeqNode extends Node {
+  const SeqNode(this.items);
+  final List<Node> items;
+}

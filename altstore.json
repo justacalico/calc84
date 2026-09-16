@@ -21,11 +21,25 @@
       "iconURL": "https://gitlab.com/HttpAnimations/calc84/-/raw/main/assets/icon/app_icon.png",
       "tintColor": "16181d",
       "category": "utilities",
-      "screenshots": [
-        "https://gitlab.com/HttpAnimations/calc84/-/raw/main/docs/images/home.png",
-        "https://gitlab.com/HttpAnimations/calc84/-/raw/main/docs/images/graph.png",
-        "https://gitlab.com/HttpAnimations/calc84/-/raw/main/docs/images/mode.png"
-      ],
+      "screenshots": {
+        "iphone": [
+          {
+            "imageURL": "https://gitlab.com/HttpAnimations/calc84/-/raw/main/docs/images/home.png",
+            "width": 840,
+            "height": 1720
+          },
+          {
+            "imageURL": "https://gitlab.com/HttpAnimations/calc84/-/raw/main/docs/images/graph.png",
+            "width": 840,
+            "height": 1720
+          },
+          {
+            "imageURL": "https://gitlab.com/HttpAnimations/calc84/-/raw/main/docs/images/mode.png",
+            "width": 840,
+            "height": 1720
+          }
+        ]
+      },
       "versions": [
         {
           "version": "1.1.0",

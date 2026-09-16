@@ -104,7 +104,12 @@ jobs:
 
       - name: Check commits
         if: github.event_name == 'pull_request' || github.ref == 'refs/heads/main'
-        run: cog check --from-latest-tag || cog check
+        run: |
+          if git tag -l 'v*' | grep -q .; then
+            cog check --from-latest-tag
+          else
+            echo "No release tags yet, skipping commit check"
+          fi
 
       - name: Analyze and test frontend
         run: |

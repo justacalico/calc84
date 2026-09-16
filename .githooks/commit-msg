@@ -1,0 +1,15 @@
+#!/bin/sh
+# Safety net for cocogitto: prefix non-conventional commit subjects with
+# "misc:" so `cog check` and `cog bump` never break on ad-hoc messages.
+MSG_FILE="$1"
+FIRST_LINE=$(head -n1 "$MSG_FILE")
+
+case "$FIRST_LINE" in
+  "" | \#* | "Merge "* | "Revert "*) exit 0 ;;
+esac
+
+if printf '%s' "$FIRST_LINE" | grep -qE '^(feat|fix|chore|ci|docs|refactor|style|test|perf|revert|build|misc)(\([^)]*\))?!?: .+'; then
+  exit 0
+fi
+
+{ printf 'misc: %s\n' "$FIRST_LINE"; tail -n +2 "$MSG_FILE"; } > "$MSG_FILE.tmp" && mv "$MSG_FILE.tmp" "$MSG_FILE"

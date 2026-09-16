@@ -9,3 +9,10 @@ build/
 coverage/
 *.lcov
 doc/api/
+
+# Android signing material - never commit
+*.jks
+*.keystore
+key.properties
+android/app/key.properties
+android/app/upload-keystore.jks

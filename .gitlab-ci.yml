@@ -1,0 +1,14 @@
+image: ghcr.io/cirruslabs/flutter:stable
+
+variables:
+  GIT_DEPTH: "1"
+
+pages:
+  script:
+    - flutter build web --release --base-href "/$CI_PROJECT_NAME/"
+    - mv build/web public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH

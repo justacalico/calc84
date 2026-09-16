@@ -392,15 +392,10 @@ jobs:
       - name: Delete existing nightly assets
         run: |
           set -euo pipefail
-          TAG="nightly"
-          ASSETS=$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG" -q '.assets[].name' 2>/dev/null || true)
-          if [ -n "$ASSETS" ]; then
-            RELEASE_ID=$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG" -q '.id')
-            for asset in $ASSETS; do
-              ASSET_ID=$(gh api "repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID/assets" -q ".[] | select(.name == \"$asset\") | .id")
-              gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/assets/$ASSET_ID" || true
-            done
-          fi
+          IDS=$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/nightly" -q '.assets[].id' 2>/dev/null || true)
+          for id in $IDS; do
+            gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/assets/$id" || true
+          done
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

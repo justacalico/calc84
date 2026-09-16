@@ -389,13 +389,15 @@ jobs:
         working-directory: release-assets
         run: sha256sum * > ../SHA256SUMS.txt
 
-      - name: Delete existing nightly assets
+      - name: Delete existing nightly release
         run: |
-          set -euo pipefail
-          IDS=$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/nightly" -q '.assets[].id' 2>/dev/null || true)
-          for id in $IDS; do
-            gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/assets/$id" || true
-          done
+          # The tag was just force-moved, and updating a release on a moved
+          # tag fails validation, so the nightly release is recreated whole.
+          # The API delete removes only the release record, not the tag.
+          REL_ID=$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/nightly" -q '.id' 2>/dev/null || true)
+          if [ -n "$REL_ID" ]; then
+            gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/$REL_ID"
+          fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

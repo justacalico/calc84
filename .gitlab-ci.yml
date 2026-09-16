@@ -5,7 +5,8 @@ variables:
 
 pages:
   script:
-    - flutter build web --release --base-href "/$CI_PROJECT_NAME/"
+    # Pages unique domains serve the site at /, not /$CI_PROJECT_NAME/.
+    - flutter build web --release --base-href "/"
     - mv build/web public
   artifacts:
     paths:

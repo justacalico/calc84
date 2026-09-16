@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "dev.calc84" "\0"
-            VALUE "FileDescription", "calc84" "\0"
+            VALUE "FileDescription", "CALC-84" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "calc84" "\0"
+            VALUE "InternalName", "CALC-84" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 dev.calc84. All rights reserved." "\0"
             VALUE "OriginalFilename", "calc84.exe" "\0"
-            VALUE "ProductName", "calc84" "\0"
+            VALUE "ProductName", "CALC-84" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

@@ -163,13 +163,17 @@ class Evaluator {
     // like typing into Y= on the real OS.
     if (n.index == null &&
         RegExp(r'^(Y\d|X\dT|Y\dT|r\d|u|v|w)$').hasMatch(t)) {
+      // A quoted string stores its contents, unquoted stores the
+      // expression text itself, like typing into Y= on the real OS.
+      final expr =
+          n.expr is StrNode ? (n.expr as StrNode).v : unparse(n.expr);
       if (t == 'u' || t == 'v' || t == 'w') {
-        ctx.sequences[t]!.expression = unparse(n.expr);
+        ctx.sequences[t]!.expression = expr;
       } else {
-        ctx.equation(t).expression = unparse(n.expr);
+        ctx.equation(t).expression = expr;
       }
       ctx.clearSequenceCache();
-      return StringValue(unparse(n.expr));
+      return StringValue(expr);
     }
     final v = eval(n.expr);
     final idx = n.index;
@@ -276,26 +280,17 @@ class Evaluator {
     return RealValue(f(v.asReal));
   }
 
-  Value _broadcastC(Value v, Complex Function(Complex) f) {
-    if (v is ListValue) {
-      return ListValue([for (final i in v.items) _broadcastC(i, f)]);
-    }
-    return ComplexValue(f(v.asComplex));
-  }
+  Value _broadcastC(Value v, Complex Function(Complex) f) =>
+      ComplexValue(f(v.asComplex));
 
   Value _unary(String op, Value v) {
     if (op == '⁻') {
       if (v is MatrixValue) return MatrixValue(v.m.scale(-1));
-      if (v.isComplex || _wantsComplex(v)) {
-        return _broadcastC(v, (c) => -c);
-      }
+      if (v.isComplex) return _broadcastC(v, (c) => -c);
       return _broadcast(v, (x) => -x);
     }
     throw const CalcException('SYNTAX');
   }
-
-  bool _wantsComplex(Value v) =>
-      v is ComplexValue && ctx.complexMode == ComplexMode.aBi;
 
   Value _postfix(String op, Value v) => switch (op) {
         '!' => _broadcast(v, _factorial),
@@ -339,8 +334,8 @@ class Evaluator {
       }
       return r;
     }
-    // Non-integers use x! = gamma(x+1), like the real OS.
-    if (x < 0) throw const CalcException('DOMAIN');
+    // Non-integers use x! = gamma(x+1), like the real OS. Negative
+    // non-integers still evaluate through the gamma reflection.
     return _gamma(x + 1);
   }
 

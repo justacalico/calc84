@@ -35,8 +35,6 @@ class Fraction {
     return Fraction(sign * h1, k1);
   }
 
-  double toDouble() => n / d;
-
   @override
   String toString() => d == 1 ? '$n' : '$n/$d';
 }

@@ -185,7 +185,8 @@ class CalcState extends ChangeNotifier {
         return;
       case KeyId.alpha:
         mod = switch (mod) {
-          Modifier.none || Modifier.second => Modifier.alpha,
+          Modifier.none => Modifier.alpha,
+          Modifier.second => Modifier.alphaLock,
           Modifier.alpha => Modifier.alphaLock,
           Modifier.alphaLock => Modifier.none,
         };
@@ -292,7 +293,6 @@ class CalcState extends ChangeNotifier {
         KeyId.graph => _C.table,
         KeyId.mode => _C.quit,
         KeyId.del => _C.ins,
-        KeyId.alpha => _C.aLock,
         KeyId.xttn => _C.link,
         KeyId.stat => _C.list,
         KeyId.math => _C.test,
@@ -436,7 +436,10 @@ class CalcState extends ChangeNotifier {
   // =========================================================================
 
   void _command(_C c, KeyId id) {
-    pendingRcl = '';
+    // Variable pickers stay pending so RCL completes from a menu.
+    if (c != _C.vars && c != _C.list && c != _C.matrix) {
+      pendingRcl = '';
+    }
     switch (c) {
       case _C.yEquals:
         menu = null;
@@ -483,8 +486,6 @@ class CalcState extends ChangeNotifier {
       case _C.ins:
         final e = _activeEntry();
         if (e != null) e.insertMode = !e.insertMode;
-      case _C.aLock:
-        mod = Modifier.alphaLock;
       case _C.link:
         _openMenu(menus.link());
       case _C.list:
@@ -637,7 +638,7 @@ class CalcState extends ChangeNotifier {
     }
     menu = _menuStack.isNotEmpty ? _menuStack.removeLast() : null;
     if (item.insert != null) {
-      insertText(item.insert!);
+      _insert(item.insert!);
     }
     item.action?.call();
     notify();
@@ -1769,6 +1770,7 @@ class CalcState extends ChangeNotifier {
       }
       final g = guess.abs() < 1 ? 1.0 : guess.abs();
       final root = Calculus.solve(f, guess - g, guess + g);
+      ctx.vars['X'] = root;
       solverX.setText(_numText(root));
       history.add(HistoryEntry('Solver', ['X=${_numText(root)}']));
     } on CalcException catch (e) {
@@ -2357,7 +2359,7 @@ class _Cmd {
 
 enum _C {
   yEquals, window, zoom, trace, graph, table, tblset, statPlot, format,
-  calc, mode, quit, ins, aLock, link, list, test, angle, draw, distr,
+  calc, mode, quit, ins, link, list, test, angle, draw, distr,
   matrix, catalog, mem, rcl, off, entry, solve, insertXttn, stat, math,
   apps, prgm, vars, clear, del, up, down, left, right, on, enter,
 }

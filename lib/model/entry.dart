@@ -123,17 +123,10 @@ class EntryLine {
     if (cursor < tokens.length) cursor++;
   }
 
-  void home() => cursor = 0;
-
-  void end() => cursor = tokens.length;
-
   void clear() {
     tokens.clear();
     cursor = 0;
   }
-
-  /// The text the cursor sits on, for display.
-  String get cursorToken => cursor < tokens.length ? tokens[cursor] : '';
 
   /// Render for the LCD: returns (text, cursorCharIndex) where the
   /// cursor char index marks where the cursor bar/underline sits.

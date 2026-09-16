@@ -219,9 +219,6 @@ class Matrix {
     }
   }
 
-  void addScaledRow(int dst, int k, int src) =>
-      addScaledRowK(dst, k.toDouble(), src);
-
   void addScaledRowK(int dst, double k, int src) {
     for (var c = 0; c < cols; c++) {
       data[dst][c] += k * data[src][c];

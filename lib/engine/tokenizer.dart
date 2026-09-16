@@ -37,7 +37,7 @@ const multiNames = [
   'Y1', 'Y2', 'Y3', 'Y4', 'Y5', 'Y6', 'Y7', 'Y8', 'Y9', 'Y0',
   'r1', 'r2', 'r3', 'r4', 'r5', 'r6',
   '[A]', '[B]', '[C]', '[D]', '[E]', '[F]', '[G]', '[H]', '[I]', '[J]',
-  'Ans',
+  'Ans', 'getKey',
   'X', 'T', 'n', 'u', 'v', 'w', 'θ', 'i', 'π', 'e',
 ];
 
@@ -66,9 +66,6 @@ const functionNames = [
   'dayOfWk(', 'dbd(',
   'rand',
 ];
-
-/// Infix operators that read like functions: `5 nPr 2`.
-const infixOps = {'nPr', 'nCr', 'ˣ√'};
 
 /// Word-like operators matched before single letter names.
 const wordOps = {'and', 'or', 'xor', 'nPr', 'nCr'};
@@ -112,13 +109,7 @@ class Tokenizer {
       }
       final nm = _matchName();
       if (nm != null) {
-        if (infixOps.contains(nm)) {
-          out.add(Tok(TokType.op, nm));
-        } else if (nm == 'rand') {
-          out.add(Tok(TokType.func, nm));
-        } else {
-          out.add(Tok(TokType.name, nm));
-        }
+        out.add(Tok(TokType.name, nm));
         continue;
       }
       if (src.startsWith('⁻¹', pos)) {
@@ -230,16 +221,18 @@ class Tokenizer {
   }
 
   String? _matchWordOp() {
-    String? best;
+    // wordOps never share a prefix, so the first match is final.
     for (final w in wordOps) {
-      if (src.startsWith(w, pos) &&
-          (best == null || w.length > best.length)) {
-        best = w;
+      if (src.startsWith(w, pos)) {
+        pos += w.length;
+        return w;
       }
     }
-    if (src.startsWith('ˣ√', pos)) best = 'ˣ√';
-    if (best != null) pos += best.length;
-    return best;
+    if (src.startsWith('ˣ√', pos)) {
+      pos += 'ˣ√'.length;
+      return 'ˣ√';
+    }
+    return null;
   }
 
   String? _matchName() {

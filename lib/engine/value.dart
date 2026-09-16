@@ -80,4 +80,3 @@ extension ValueNum on Value {
   bool get isComplex => this is ComplexValue;
 }
 
-Value realValue(double v) => RealValue(v);

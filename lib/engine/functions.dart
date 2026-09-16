@@ -330,8 +330,7 @@ _Fn _minMax(bool min) => (ev, args) {
         }
         return RealValue(best);
       }
-      if (vals.length == 2 &&
-          (vals[0] is ListValue || vals[1] is ListValue)) {
+      if (vals.length == 2) {
         return _pairMinMax(vals, choose);
       }
       var best = vals[0].asReal;
@@ -611,9 +610,7 @@ class _Stats {
   final int n;
 
   double get s => n > 1 ? math.sqrt((sumX2 - sumX * sumX / n) / (n - 1)) : 0;
-  double get sigma => n > 0 ? math.sqrt((sumX2 - sumX * sumX / n) / n) : 0;
   double get variance => s * s;
-  double get popVariance => sigma * sigma;
 }
 
 _Stats _stats(List<double> data, List<double> freq) {

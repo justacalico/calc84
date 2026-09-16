@@ -6,12 +6,6 @@ import '../engine/evaluator.dart';
 import '../engine/value.dart';
 import '../model/settings.dart';
 
-/// Which curve families exist for the current graph mode.
-class EquationSet {
-  EquationSet(this.names);
-
-  final List<String> names;
-}
 
 /// A marker produced by the CALC menu (zero, min, max, intersect).
 class CalcMarker {
@@ -154,12 +148,10 @@ class GraphController {
 
   /// Parameter range for the curve.
   (double, double, double) paramRange() => switch (modes.graph) {
-        GraphMode.func => (window.xMin, window.xMax, 0.0),
         GraphMode.parametric => (window.tMin, window.tMax, window.tStep),
         GraphMode.polar =>
           (window.thetaMin, window.thetaMax, window.thetaStep),
-        GraphMode.sequence =>
-          (window.nMin.toDouble(), window.nMax.toDouble(), 1.0),
+        _ => (window.xMin, window.xMax, 0.0),
       };
 
   /// Sample points for one equation, as a list of polylines (breaks
@@ -332,7 +324,8 @@ class GraphController {
       }
     }
     if (!lo.isFinite || !hi.isFinite) return;
-    final pad = (hi - lo).abs() * 0.08;
+    var pad = (hi - lo).abs() * 0.08;
+    if (pad == 0) pad = 2;
     window.yMin = lo - pad;
     window.yMax = hi + pad;
   }

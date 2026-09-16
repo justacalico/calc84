@@ -368,21 +368,13 @@ class GraphPainter extends CustomPainter {
     canvas.drawPath(path, p);
   }
 
+  // _plotInline binds X around every call, so no save/restore here.
   double? _evalInline(String expr) {
     try {
       final name = expr.trim();
-      if (s.ctx.equations[name]?.isDefined ?? false) {
-        final saved = s.ctx.vars['X'];
-        try {
-          return evalSource(s.ctx.equations[name]!.expression, s.ctx)
-              .asReal;
-        } finally {
-          if (saved == null) {
-            s.ctx.vars.remove('X');
-          } else {
-            s.ctx.vars['X'] = saved;
-          }
-        }
+      final eq = s.ctx.equations[name];
+      if (eq != null && eq.isDefined) {
+        return evalSource(eq.expression, s.ctx).asReal;
       }
       return evalSource(expr, s.ctx).asReal;
     } catch (_) {
@@ -531,9 +523,7 @@ class GraphPainter extends CustomPainter {
       if (g.tracing) {
         final p = g.tracePoint;
         if (p != null) {
-          final t = s.modes.graph == GraphMode.func
-              ? 'X=${f.num(p.$1)}  Y=${f.num(p.$2)}'
-              : _traceCoordLabel(f, p);
+          final t = _traceCoordLabel(f, p);
           _label(canvas, t, 4, size.height - 13,
               color: CalcTheme.lcdText, size: 9);
         }
@@ -574,7 +564,7 @@ class GraphPainter extends CustomPainter {
         'θ=${f.num(g.traceParam)}  X=${f.num(p.$1)}  Y=${f.num(p.$2)}',
       GraphMode.sequence =>
         'n=${g.traceN}  ${g.traceName ?? 'u'}(n)=${f.num(p.$2)}',
-      _ => 'X=${f.num(p.$1)}  Y=${f.num(p.$2)}',
+      GraphMode.func => 'X=${f.num(p.$1)}  Y=${f.num(p.$2)}',
     };
   }
 

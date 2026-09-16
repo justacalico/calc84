@@ -36,6 +36,7 @@ pages:
     # Pages unique domains serve the site at /, not /$CI_PROJECT_NAME/.
     - flutter build web --release --base-href "/"
     - mv build/web public
+    - cp altstore.json public/altstore.json
   artifacts:
     paths:
       - public

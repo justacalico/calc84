@@ -47,6 +47,25 @@ flutter build apk
 flutter build macos
 ```
 
+## Installing
+
+Every tagged release publishes packages for all platforms on the
+[releases page](https://gitlab.com/HttpAnimations/calc84/-/releases):
+signed Android APK/AAB, Linux zip/deb/rpm for x86_64 and arm64, Windows
+x86_64 and arm64 zip, macOS arm64 zip/dmg, and an unsigned iOS IPA.
+
+On iOS, add the AltStore source to install and auto-update:
+
+```
+https://gitlab.com/HttpAnimations/calc84/-/raw/main/altstore.json
+```
+
+Or tap this link on the device:
+[altstore://source?url=https://gitlab.com/HttpAnimations/calc84/-/raw/main/altstore.json](altstore://source?url=https://gitlab.com/HttpAnimations/calc84/-/raw/main/altstore.json)
+
+The feed regenerates on every release, so AltStore picks up new versions
+automatically.
+
 ## Testing
 
 ```sh

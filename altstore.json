@@ -1,0 +1,45 @@
+{
+  "name": "CALC-84",
+  "identifier": "gitlab.httpanimations.calc84.source",
+  "sourceURL": "https://gitlab.com/HttpAnimations/calc84/-/raw/main/altstore.json",
+  "subtitle": "TI-84 Plus CE style graphing calculator",
+  "description": "A graphing calculator that reproduces the TI-84 Plus CE, with graphing, statistics, matrices, lists, programs and finance tools.",
+  "iconURL": "https://gitlab.com/HttpAnimations/calc84/-/raw/main/assets/icon/app_icon.png",
+  "headerURL": "https://gitlab.com/HttpAnimations/calc84/-/raw/main/assets/icon/app_icon.png",
+  "website": "https://gitlab.com/HttpAnimations/calc84",
+  "tintColor": "16181d",
+  "featuredApps": [
+    "gitlab.httpanimations.calc84"
+  ],
+  "apps": [
+    {
+      "name": "CALC-84",
+      "bundleIdentifier": "gitlab.httpanimations.calc84",
+      "developerName": "HttpAnimations",
+      "subtitle": "TI-84 Plus CE style graphing calculator",
+      "localizedDescription": "A skeuomorphic TI-84 Plus CE graphing calculator. Every key, menu and screen works like the real handheld: function, parametric, polar and sequence graphing, statistics and regressions, matrices, lists, TI-BASIC programs, finance solver and more.",
+      "iconURL": "https://gitlab.com/HttpAnimations/calc84/-/raw/main/assets/icon/app_icon.png",
+      "tintColor": "16181d",
+      "category": "utilities",
+      "screenshots": [
+        "https://gitlab.com/HttpAnimations/calc84/-/raw/main/docs/images/home.png",
+        "https://gitlab.com/HttpAnimations/calc84/-/raw/main/docs/images/graph.png",
+        "https://gitlab.com/HttpAnimations/calc84/-/raw/main/docs/images/mode.png"
+      ],
+      "versions": [
+        {
+          "version": "1.1.0",
+          "date": "2026-09-16T23:06:55Z",
+          "localizedDescription": "Automatic release pipeline, signed Android builds and the AltStore source feed.",
+          "downloadURL": "https://github.com/justacalico/calc84/releases/download/v1.1.0/calc84-ios-arm64-unsigned.ipa",
+          "size": 7453324,
+          "minOSVersion": "13.0"
+        }
+      ],
+      "appPermissions": {
+        "entitlements": [],
+        "privacy": {}
+      }
+    }
+  ]
+}

@@ -11,6 +11,9 @@ spec:
 
 ---
 
+default:
+  tags: [linux-truenas]
+
 stages:
   - build
   - sync

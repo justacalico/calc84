@@ -40,7 +40,7 @@ cat > "$PKGDIR/usr/share/applications/calc84.desktop" <<'EOF'
 [Desktop Entry]
 Type=Application
 Name=CALC-84
-Comment=TI-84 Plus CE style graphing calculator
+Comment=Skeuomorphic graphing calculator
 Exec=/usr/bin/calc84
 Icon=calc84
 Categories=Utility;Science;Math;
@@ -54,9 +54,9 @@ Section: utils
 Priority: optional
 Architecture: $ARCH
 Maintainer: HttpAnimations <noreply@gitlab.com>
-Description: TI-84 Plus CE style graphing calculator
- A graphing calculator built with Flutter that reproduces the feel of the
- physical TI-84 Plus CE handheld with a skeuomorphic interface.
+Description: Skeuomorphic graphing calculator
+ A graphing calculator built with Flutter that reproduces the feel of a
+ classic physical handheld.
 EOF
 
 dpkg-deb --build "$PKGDIR" "$OUT" >/dev/null

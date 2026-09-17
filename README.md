@@ -1,7 +1,7 @@
 # CALC-84
 
 An open source graphing calculator built with Flutter that recreates a classic
-TI-84 Plus CE handheld, right down to the skeuomorphic keys and segmented LCD.
+handheld, right down to the skeuomorphic keys and segmented LCD.
 It runs on Android, iOS, macOS, Linux, Windows, and the web.
 
 <p align="center">
@@ -26,7 +26,7 @@ It runs on Android, iOS, macOS, Linux, Windows, and the web.
 - **Distributions** - normal, t, chi-square, F, binomial, Poisson, geometric,
   plus `rand`, `randInt`, `randNorm`, `randBin`.
 - **Finance** - the full TVM solver with N, I%, PV, PMT, FV, P/Y, C/Y.
-- **Programming** - a TI-BASIC interpreter with `If`/`Then`/`Else`, loops,
+- **Programming** - a BASIC interpreter with `If`/`Then`/`Else`, loops,
   `For`, `While`, `Repeat`, `Menu`, `Input`, `Prompt`, `Disp`, `Output`,
   labels and `Goto`.
 - **Everything else** - solver, tables (auto and ask), memory management,

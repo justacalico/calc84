@@ -1,7 +1,7 @@
 import 'package:calc84/engine/context.dart';
 import 'package:calc84/engine/evaluator.dart';
 import 'package:calc84/engine/matrix.dart';
-import 'package:calc84/engine/tibasic.dart';
+import 'package:calc84/engine/program.dart';
 import 'package:calc84/engine/tokenizer.dart';
 import 'package:calc84/engine/tvm.dart';
 import 'package:calc84/engine/value.dart';
@@ -77,7 +77,7 @@ void main() {
     });
   });
 
-  group('ti-basic leftovers', () {
+  group('program leftovers', () {
     test('ClrHome, single-line If and nested skip', () {
       final ctx = CalcContext()..complexMode = ComplexMode.aBi;
       ProgramRunner run(String src) => ProgramRunner(src, ctx)..run();

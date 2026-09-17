@@ -69,11 +69,6 @@ class _Brand extends StatelessWidget {
           style: CalcTheme.keyLabel(size: 15, color: CalcTheme.brand)
               .copyWith(letterSpacing: 1.5, fontStyle: FontStyle.italic),
         ),
-        const SizedBox(width: 6),
-        Text(
-          'Plus CE',
-          style: CalcTheme.keyLabel(size: 12, color: const Color(0xFF8A8F95)),
-        ),
       ],
     );
   }

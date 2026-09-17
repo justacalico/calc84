@@ -463,7 +463,7 @@ class ScreenBuilders {
   static ScreenContent _about(CalcState s) {
     return ScreenContent(
       lines: [
-        LcdLine.text('CALC-84 Plus CE', inverse: true),
+        LcdLine.text('CALC-84', inverse: true),
         LcdLine.text(''),
         LcdLine.text('Open source graphing'),
         LcdLine.text('calculator'),

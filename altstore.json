@@ -46,7 +46,7 @@
           "date": "2026-09-17T00:12:48Z",
           "localizedDescription": "**Version:** 1.2.0\n**Build:** #11\n**Date:** 2026-09-17\n**Commit:** 08d4468be2406c3f1c24376182abb4d30b627596\n\n### Artifacts\n- Android (signed apk + aab)\n- Linux desktop (x86_64 + arm64: tar.gz, zip, deb, rpm)\n- Windows (x86_64 + arm64: zip)\n- macOS (arm64: zip, dmg)\n- iOS (arm64: unsigned ipa)\n\n### Verification\nSHA256 checksums are in `SHA256SUMS.txt`.\n\n\n**Full Changelog**: https://github.com/justacalico/calc84/compare/v1.1.0...v1.2.0",
           "downloadURL": "https://github.com/justacalico/calc84/releases/download/v1.2.0/calc84-ios-arm64-unsigned.ipa",
-          "size": 7453324,
+          "size": 7453326,
           "minOSVersion": "13.0"
         },
         {
@@ -65,7 +65,7 @@
       "version": "1.2.0",
       "versionDate": "2026-09-17T00:12:48Z",
       "downloadURL": "https://github.com/justacalico/calc84/releases/download/v1.2.0/calc84-ios-arm64-unsigned.ipa",
-      "size": 7453324
+      "size": 7453326
     }
   ]
 }

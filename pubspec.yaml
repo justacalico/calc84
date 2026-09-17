@@ -1,7 +1,7 @@
 name: calc84
 description: "An open source graphing calculator that recreates the look and feel of a classic handheld."
 publish_to: 'none'
-version: 1.2.0+3
+version: 1.2.1+4
 
 environment:
   sdk: ^3.12.0

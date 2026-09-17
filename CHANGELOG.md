@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.2.2 - 2026-09-17
+#### Bug Fixes
+- 版本检查允许 tag 前缀 v - (0ea5171) - HttpAnimations
+- 无版本升级时正确跳过发布 - (5e8bc6e) - HttpAnimations
+
+- - -
+
 ## v1.2.1 - 2026-09-17
 #### Bug Fixes
 - 修复 AltStore 源更新脚本的 jq 优先级 - (da8f373) - HttpAnimations

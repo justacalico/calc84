@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.2.0 - 2026-09-16
+#### Features
+- 添加自更新的 AltStore 源 - (004e44f) - HttpAnimations
+#### Bug Fixes
+- 按 tag_name 清理所有 nightly 草稿发布 - (c4b4396) - HttpAnimations
+- 删除 nightly 前校验 release id 为数字 - (e7caa8d) - HttpAnimations
+- nightly 改为先删除再重建以避免标签冲突 - (e252ba0) - HttpAnimations
+- AltStore 截图改用带尺寸的对象格式 - (d82c464) - HttpAnimations
+
+- - -
+
 ## v1.1.0 - 2026-09-16
 #### Features
 - 添加 GitLab 同步 GitHub 的自动发布流水线 - (688fc04) - HttpAnimations

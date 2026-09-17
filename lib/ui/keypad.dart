@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../model/keymap.dart';
 import 'key_button.dart';
@@ -45,11 +46,7 @@ class Keypad extends StatelessWidget {
         children: [
           for (final id in ids)
             Expanded(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 3, vertical: 1),
-                child: KeyButton(def: keyDefOf(id), onPress: onPress),
-              ),
+              child: KeyButton(def: keyDefOf(id), onPress: onPress),
             ),
           // Pad short rows so the grid stays aligned.
           for (var i = ids.length; i < 5; i++)
@@ -96,13 +93,16 @@ class _ArrowCluster extends StatelessWidget {
                     ),
                   ),
                 ),
-                _arrowBtn(KeyId.up, Alignment.topCenter, Icons.arrow_drop_up),
-                _arrowBtn(
-                    KeyId.down, Alignment.bottomCenter, Icons.arrow_drop_down),
-                _arrowBtn(
-                    KeyId.left, Alignment.centerLeft, Icons.arrow_left),
-                _arrowBtn(
-                    KeyId.right, Alignment.centerRight, Icons.arrow_right),
+                _arrowBtn(KeyId.up, Alignment.topCenter, Icons.arrow_drop_up,
+                    const EdgeInsets.fromLTRB(14, 6, 14, 34)),
+                _arrowBtn(KeyId.down, Alignment.bottomCenter,
+                    Icons.arrow_drop_down,
+                    const EdgeInsets.fromLTRB(14, 34, 14, 6)),
+                _arrowBtn(KeyId.left, Alignment.centerLeft, Icons.arrow_left,
+                    const EdgeInsets.fromLTRB(6, 14, 34, 14)),
+                _arrowBtn(KeyId.right, Alignment.centerRight,
+                    Icons.arrow_right,
+                    const EdgeInsets.fromLTRB(34, 14, 6, 14)),
                 Center(
                   child: Container(
                     width: size * 0.26,
@@ -122,14 +122,18 @@ class _ArrowCluster extends StatelessWidget {
     );
   }
 
-  Widget _arrowBtn(KeyId id, Alignment at, IconData icon) {
+  /// The padding grows the tap target inward while the icon stays at
+  /// its hardware position on the ring.
+  Widget _arrowBtn(
+      KeyId id, Alignment at, IconData icon, EdgeInsets padding) {
     return Align(
       alignment: at,
       child: InkWell(
         customBorder: const CircleBorder(),
+        onTapDown: (_) => HapticFeedback.lightImpact(),
         onTap: () => onPress(id),
         child: Padding(
-          padding: const EdgeInsets.all(6),
+          padding: padding,
           child: Icon(icon, color: Colors.white70, size: 20),
         ),
       ),

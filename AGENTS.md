@@ -14,7 +14,7 @@ This project is kept at an A+ grade. Keep it that way when making changes.
 ## Architecture
 
 - `lib/engine` - pure Dart math: tokenizer, parser, evaluator, functions,
-  TI-BASIC interpreter, TVM solver, calculus, distributions, regressions.
+  BASIC interpreter, TVM solver, calculus, distributions, regressions.
   No Flutter imports allowed here.
 - `lib/model` - key map, screen definitions, settings, entry-line model.
 - `lib/state` - calculator state machine and graphing controller.
@@ -22,7 +22,7 @@ This project is kept at an A+ grade. Keep it that way when making changes.
 
 ## Hardware fidelity
 
-- Match the real TI-84 Plus CE, including error codes, edge cases, and
+- Match the real calculator, including error codes, edge cases, and
   quirks. When in doubt, check what the physical device does.
 - Lists are real-only, `rand(n)` returns a list, `-0.5!` uses gamma
   reflection, and `2nd`/`alpha` modifiers behave like the hardware.

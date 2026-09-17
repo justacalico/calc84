@@ -1,7 +1,7 @@
 import 'package:calc84/engine/context.dart';
 import 'package:calc84/engine/evaluator.dart';
 import 'package:calc84/engine/format.dart';
-import 'package:calc84/engine/tibasic.dart';
+import 'package:calc84/engine/program.dart';
 import 'package:calc84/engine/tvm.dart';
 import 'package:calc84/engine/value.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,7 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   setUpAll(() => registerInlineEval(evalSource));
 
-  group('TI-BASIC', () {
+  group('program runner', () {
     ProgramRunner run(String src) {
       final r = ProgramRunner(src, CalcContext());
       r.run();

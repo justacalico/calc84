@@ -1000,7 +1000,7 @@ Value _dbd(Evaluator ev, List<Node> args) {
   return RealValue(b.difference(a).inDays.toDouble());
 }
 
-/// TI date numbers are mm.ddyy with a 1950-2049 year window.
+/// Date numbers are mm.ddyy with a 1950-2049 year window.
 DateTime _parseDate(double v) {
   final s = v.toStringAsFixed(4);
   final parts = s.split('.');

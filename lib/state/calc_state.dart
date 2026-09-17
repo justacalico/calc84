@@ -6,7 +6,7 @@ import '../engine/format.dart';
 import '../engine/matrix.dart';
 import '../engine/calculus.dart';
 import '../engine/regressions.dart';
-import '../engine/tibasic.dart';
+import '../engine/program.dart';
 import '../engine/tvm.dart';
 import '../engine/value.dart';
 import '../model/entry.dart';

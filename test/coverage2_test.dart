@@ -4,7 +4,7 @@ import 'package:calc84/engine/distributions.dart';
 import 'package:calc84/engine/evaluator.dart';
 import 'package:calc84/engine/format.dart';
 import 'package:calc84/engine/matrix.dart';
-import 'package:calc84/engine/tibasic.dart';
+import 'package:calc84/engine/program.dart';
 import 'package:calc84/engine/value.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -348,7 +348,7 @@ void main() {
     });
   });
 
-  group('tibasic', () {
+  group('program', () {
     ProgramRunner run(String src, CalcContext ctx) =>
         ProgramRunner(src, ctx)..run();
 

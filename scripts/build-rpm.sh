@@ -40,7 +40,7 @@ cat > "$TOPDIR/SPECS/calc84.spec" <<'EOF'
 Name: calc84
 Version: %{pkg_version}
 Release: %{pkg_release}%{?dist}
-Summary: TI-84 Plus CE style graphing calculator
+Summary: Skeuomorphic graphing calculator
 License: AGPL-3.0-only
 URL: https://gitlab.com/HttpAnimations/calc84
 
@@ -52,9 +52,9 @@ URL: https://gitlab.com/HttpAnimations/calc84
 %global __provides_exclude_from ^/opt/calc84/.*
 
 %description
-A TI-84 Plus CE style graphing calculator built with Flutter. Reproduces the
-feel of the physical handheld with a skeuomorphic interface and supports
-graphing, statistics, matrices, lists, programs and finance tools.
+A skeuomorphic graphing calculator built with Flutter. Reproduces the feel of
+a classic physical handheld and supports graphing, statistics, matrices,
+lists, programs and finance tools.
 
 %install
 mkdir -p %{buildroot}/opt/calc84 %{buildroot}/usr/bin \
@@ -68,7 +68,7 @@ cat > %{buildroot}/usr/share/applications/calc84.desktop <<'DESKTOP'
 [Desktop Entry]
 Type=Application
 Name=CALC-84
-Comment=TI-84 Plus CE style graphing calculator
+Comment=Skeuomorphic graphing calculator
 Exec=/usr/bin/calc84
 Icon=calc84
 Categories=Utility;Science;Math;

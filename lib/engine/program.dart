@@ -42,7 +42,7 @@ class _RepeatBlock extends _Block {
   final int startStmt;
 }
 
-/// Mini interpreter for the classic TI-BASIC dialect.
+/// Mini interpreter for the classic BASIC dialect.
 class ProgramRunner {
   ProgramRunner(this.source, this.ctx);
 
@@ -213,7 +213,7 @@ class ProgramRunner {
         final stmts = _lines[_pc];
         final thenInline =
             _stmtIdx < stmts.length && stmts[_stmtIdx] is _Then;
-        // `Then` on the following line is the usual TI layout.
+        // `Then` on the following line is the usual layout.
         final thenNextLine = !thenInline &&
             _pc + 1 < _lines.length &&
             _lines[_pc + 1].isNotEmpty &&

@@ -20,7 +20,7 @@ class _CalcAppState extends State<CalcApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CALC-84 Plus CE',
+      title: 'CALC-84',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,

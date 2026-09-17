@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v1.3.0 - 2026-09-17
+#### Features
+- 按键与方向键按下时振动反馈 - (4cbf628) - HttpAnimations
+#### Bug Fixes
+- 扩大按键与方向键的触控热区 - (1d62d44) - HttpAnimations
+
+- - -
+
 ## v1.2.2 - 2026-09-17
 #### Bug Fixes
 - 版本检查允许 tag 前缀 v - (0ea5171) - HttpAnimations

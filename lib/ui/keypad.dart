@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../model/keymap.dart';
 import 'key_button.dart';
@@ -129,6 +130,7 @@ class _ArrowCluster extends StatelessWidget {
       alignment: at,
       child: InkWell(
         customBorder: const CircleBorder(),
+        onTapDown: (_) => HapticFeedback.lightImpact(),
         onTap: () => onPress(id),
         child: Padding(
           padding: padding,

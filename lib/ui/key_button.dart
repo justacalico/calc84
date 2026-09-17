@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../model/keymap.dart';
 import 'theme.dart';
@@ -23,7 +24,10 @@ class _KeyButtonState extends State<KeyButton> {
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTapDown: (_) => setState(() => _down = true),
+      onTapDown: (_) {
+        setState(() => _down = true);
+        HapticFeedback.lightImpact();
+      },
       onTapUp: (_) => setState(() => _down = false),
       onTapCancel: () => setState(() => _down = false),
       onTap: () => widget.onPress(widget.def.id),
